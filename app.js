@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var leankit = require("leankit-client");
-var config = require('./config');
+var config = require('./config/config');
 var accountName = "tlrg";
 var email = "joseph.ryan@laterooms.com";
 var password = "password12";
