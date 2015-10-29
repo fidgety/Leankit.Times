@@ -20,10 +20,14 @@ module.exports = function createCardTimer(config, client) {
         var numberOfCards = 0;
         _.forEach(Object.keys(req.sizes), function (key) {
             if (key === '0') return;
+            numberOfCards += req.sizes[key].length;
+        });
+        _.forEach(Object.keys(req.sizes), function (key) {
+            if (key === '0') return;
             var sizes = req.sizes[key];
-            numberOfCards += sizes.length;
             _.forEach(sizes, function (size, i) {
                 client.getCardHistory(config.boardId, size.Id, function (err, data) {
+                    called++;
                     if (err) {
                         console.log('err', err)
                     }
@@ -67,9 +71,13 @@ module.exports = function createCardTimer(config, client) {
             })
         });
         console.log(numberOfCards)
-        setTimeout(function () {
-            next();
-        }, 60000);
+        var interval = setInterval(function () {
+            if (called === numberOfCards) {
+                clearInterval(interval);
+                next();
+            }
+            console.log('did', called, 'equal', numberOfCards);
+        }, 1000);
 
     }
 };
