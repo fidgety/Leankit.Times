@@ -14,8 +14,12 @@ var client = leankit.createClient(config.accountName, config.email, config.passw
 var featureCards = require('./middleware/featureCards')(config, client);
 var splitSizes = require('./middleware/splitSizes')();
 var cardTimes = require('./middleware/cardTimes')(config, client);
+var lastTimeDone = require('./middleware/lastTimeDone')(config, client);
+var groupByWeek = require('./middleware/groupByWeek')();
+var averageSizes = require('./middleware/averageSizes')();
+var removeZeroSizes = require('./middleware/removeZeroSizes')();
 
-var routes = require('./routes/index')(featureCards, splitSizes, cardTimes);
+var routes = require('./routes/index')(featureCards, splitSizes, cardTimes, lastTimeDone, groupByWeek, averageSizes, removeZeroSizes);
 
 var app = express();
 

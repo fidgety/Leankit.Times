@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/Chart.min.js"></script>
+    <script src="/javascripts/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript">
+      window.onload = function() {
+        var ctx = document.getElementById('time').getContext("2d");
+        ctx.canvas.width = 600;
+        ctx.canvas.height = 400;
+        var xAxis = [];
+        var yAxis = [];
+        $("table tr").each(function(){
+            if(!$(this).find("td:first").text()) {
+              return
+            }
+            xAxis.push($(this).find("td:first").text()); //put elements into array
+            yAxis.push($(this).find("td:nth-child(2)").text()); //put elements into array
+        });
+        var chartData = {
+                labels: xAxis,
+                datasets: [{
+                    label: "Average Time (days)",
+                    fillColor: "rgba(220,220,220,0.2)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    data: yAxis
+                }]
+            }
+        var myLineChart = new Chart(ctx)
+        .Line(chartData, {
+              scaleOverride : true,
+              scaleSteps : 10,
+              scaleStepWidth : 1,
+              scaleStartValue : 0 
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>How long tickets take to get from the first time they enter the 'Development: WIP' to the last time they enter the 'Release: Done' column.</p>
+    <canvas id="time" width="800" height="600"></canvas>
+
+    <table>
+      <tr>
+        <th>Sunday of Week Completed</th>
+        <th>Average Size for Week</th>
+        <th>Total Tickets Completed in Week</th>
+        <th>Total Size Completed in week</th>
+      </tr>
+
+      <% for(var i = 0; i < ticketData.length; i++){ %>
+      <% var tableData = ticketData[i]%>
+      <tr>
+        <td class="bold"><%= tableData.key %></td>
+        <td><%= tableData.average %></td>
+        <td><%= tableData.numberOfCards %></td>
+        <td><%= tableData.total %></td>
+      </tr>
+      <%}%>
+    </table>
+  </body>
+</html>
