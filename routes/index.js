@@ -20,17 +20,17 @@ module.exports = function (featureCards, splitSizes, cardTimes, lastTimeDone, gr
                     averageTime: 0,
                     numberOfCards: 0
                 }
-                _.forEach(sizes, function (size) {
-                    if (!size.TimeInDays) {
+                _.forEach(sizes, function (card) {
+                    if (!card.TimeInDays) {
                         return;
                     }
                     dataForThisSize.numberOfCards++;
-                    dataForThisSize.totalTime += parseInt(size.TimeInDays);
-                    if (size.TimeInDays > dataForThisSize.biggestTime) {
-                        dataForThisSize.biggestTime = size.TimeInDays;
+                    dataForThisSize.totalTime += parseInt(card.TimeInDays, 10);
+                    if (card.TimeInDays > dataForThisSize.biggestTime) {
+                        dataForThisSize.biggestTime = card.TimeInDays;
                     }
                 })
-                dataForThisSize.averageTime = Math.round(dataForThisSize.totalTime / sizes.length);
+                dataForThisSize.averageTime = Math.round(dataForThisSize.totalTime / dataForThisSize.numberOfCards);
                 sizeData.push(dataForThisSize);
             });
 
