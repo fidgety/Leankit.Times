@@ -6,10 +6,7 @@ module.exports = function createSizeSplitter() {
 
         req.sizes = _.chain(req.features)
             .map(function (card) {
-                return {
-                    Size: card.Size,
-                    Id: card.Id
-                };
+                return card;
             })
             .groupBy('Size')
             .value();
@@ -18,3 +15,32 @@ module.exports = function createSizeSplitter() {
 
     }
 };
+
+// [{
+//     Type: 'f',
+//     Size: 1,
+//     id: 9
+// }, {
+//     Type: 'f',
+//     Size: 2,
+//     id: 9
+// }]
+//
+// [{
+//     Size: 1,
+//     id: 9
+// }, {
+//     Size: 2,
+//     id: 9
+// }]
+//
+// {
+//     1: [{
+//         Size: 1,
+//         id: 9
+//     }],
+//     2: [{
+//         Size: 2,
+//         id: 9
+//     }]
+// }

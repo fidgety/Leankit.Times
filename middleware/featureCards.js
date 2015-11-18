@@ -1,24 +1,15 @@
 var _ = require('lodash');
+var config = require('../config/config');
+var leankit = require("leankit-client");
+var client = leankit.createClient(config.accountName, config.email, config.password);
+var Promise = require('bluebird');
 
-module.exports = function createFeatureParser(config, client) {
-
-    return function storeFeatures(req, res, next) {
-        client.getBoardArchiveCards(config.boardId, function (err, archive) {
-            if (err) {
-                console.log(err);
-                return next(err)
-            }
-            var data = [];
-            _.forEach(config.cardTypes, function (cardType) {
-                var cardsOfType = _.filter(archive, {
-                    TypeName: cardType
-                });
-                data = data.concat(cardsOfType);
-            });
-
-            req.features = data;
-            next();
+module.exports = function storeFeatures() {
+    return Promise.promisify(client.getBoardArchiveCards, {
+        context: client
+    })(config.boardId).then(function(archive) {
+        return archive.filter(function (card) {
+            return config.cardTypes.indexOf(card.TypeName) > -1;
         });
-    }
-
-}
+    });
+};
