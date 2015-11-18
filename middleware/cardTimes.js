@@ -38,7 +38,7 @@ module.exports = function createCardTimer(config, client) {
                         .map(function (x) {
                             var parsableDateTime = x.DateTime.split(' at ').join(' ')
                             return {
-                                Date: moment(parsableDateTime, 'DD/MM/YYYY hh:mm:ss a')
+                                Date: moment(parsableDateTime, 'DD/MM/YYYY')
                             }
                         })
                         .sortBy('Date')
@@ -55,7 +55,7 @@ module.exports = function createCardTimer(config, client) {
                         .map(function (x) {
                             var parsableDateTime = x.DateTime.split(' at ').join(' ')
                             return {
-                                Date: moment(parsableDateTime, 'DD/MM/YYYY hh:mm:ss a')
+                                Date: moment(parsableDateTime, 'DD/MM/YYYY')
                             }
                         })
                         .sortByOrder('Date', 'desc')
