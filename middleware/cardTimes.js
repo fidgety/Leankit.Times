@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var moment = require('moment')
+var moment = require('moment');
 
 module.exports = function createCardTimer(config, client) {
 
@@ -70,13 +70,13 @@ module.exports = function createCardTimer(config, client) {
                 });
             })
         });
-        console.log(numberOfCards)
+        //console.log(numberOfCards)
         var interval = setInterval(function () {
             if (called === numberOfCards) {
                 clearInterval(interval);
                 next();
             }
-            console.log('did', called, 'equal', numberOfCards);
+        //    console.log('did', called, 'equal', numberOfCards);
         }, 1000);
 
     }

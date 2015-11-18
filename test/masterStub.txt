@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ticket Times</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/Chart.min.js"></script>
+    <script src="/javascripts/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript">
+      window.onload = function() {
+        var ctx = document.getElementById('time').getContext("2d");
+        ctx.canvas.width = 600;
+        ctx.canvas.height = 400;
+        var xAxis = [];
+        var yAxis = [];
+        $("table tr").each(function(){
+            if(!$(this).find("td:first").text()) {
+              return
+            }
+            xAxis.push($(this).find("td:first").text()); //put elements into array
+            yAxis.push($(this).find("td:nth-child(2)").text()); //put elements into array
+        });
+        var chartData = {
+                labels: xAxis,
+                datasets: [{
+                    label: "Average Time (days)",
+                    fillColor: "rgba(220,220,220,0.2)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    data: yAxis
+                }]
+            }
+        var myLineChart = new Chart(ctx).Line(chartData);
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Ticket Times</h1>
+    <p>How long tickets take to get from the first time they enter the 'Development: WIP' to the last time they enter the 'Release: Done' column.</p>
+    <canvas id="time" width="800" height="600"></canvas>
+
+    <table>
+      <tr>
+        <th>Ticket Size Group</th>
+        <th>Average Time to Done (Days)</th>
+        <th>Total Time Spent (Days)</th>
+        <th>Total Number of Tickets</th>
+        <th>Longest Ticket (Days)</th>
+      </tr>
+
+      
+      
+      <tr>
+        <td class="bold">0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+      
+      
+      <tr>
+        <td class="bold">1</td>
+        <td>3</td>
+        <td>104</td>
+        <td>22</td>
+        <td>51</td>
+      </tr>
+      
+      
+      <tr>
+        <td class="bold">2</td>
+        <td>20</td>
+        <td>160</td>
+        <td>8</td>
+        <td>47</td>
+      </tr>
+      
+      
+      <tr>
+        <td class="bold">3</td>
+        <td>1</td>
+        <td>2</td>
+        <td>1</td>
+        <td>2</td>
+      </tr>
+      
+      
+      <tr>
+        <td class="bold">4</td>
+        <td>5</td>
+        <td>5</td>
+        <td>1</td>
+        <td>5</td>
+      </tr>
+      
+      
+      <tr>
+        <td class="bold">5</td>
+        <td>6</td>
+        <td>6</td>
+        <td>1</td>
+        <td>6</td>
+      </tr>
+      
+    </table>
+  </body>
+</html>
