@@ -9,22 +9,10 @@ var getBoardArchiveCards = Promise.promisify(client.getBoardArchiveCards, {
 
 module.exports = function storeFeatures(req, res, next) {
     getBoardArchiveCards(config.boardId).then(function (archive) {
-        // req.features = archive.filter(function (card) {
-        //     return config.cardTypes.indexOf(card.TypeName) > -1;
-        // });
-        //
-        // next();
+        req.features = archive.filter(function (card) {
+            return config.cardTypes.indexOf(card.TypeName) > -1;
+        });
 
-        var data = [];
-                    _.forEach(config.cardTypes, function (cardType) {
-                        var cardsOfType = _.filter(archive, {
-                            TypeName: cardType
-                        });
-                        data = data.concat(cardsOfType);
-                    });
-
-                    req.features = data;
-                    next();
-                            
+        next();
     });
 };

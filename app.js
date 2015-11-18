@@ -11,13 +11,12 @@ var accountName = "tlrg";
 var client = leankit.createClient(config.accountName, config.email, config.password);
 var featureCards = require('./middleware/featureCards');
 var splitSizes = require('./middleware/splitSizes')();
-var cardTimes = require('./middleware/cardTimes')(config, client);
 var lastTimeDone = require('./middleware/lastTimeDone')(config, client);
 var groupByWeek = require('./middleware/groupByWeek')();
 var averageSizes = require('./middleware/averageSizes')();
 var removeZeroSizes = require('./middleware/removeZeroSizes')();
 
-var routes = require('./routes/index')(splitSizes, cardTimes, lastTimeDone, groupByWeek, averageSizes, removeZeroSizes);
+var routes = require('./routes/index')(splitSizes, lastTimeDone, groupByWeek, averageSizes, removeZeroSizes);
 
 var app = express();
 

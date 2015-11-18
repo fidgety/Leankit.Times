@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router();
 var _ = require('lodash');
 var featureCards = require('../middleware/featureCards');
+var cardTimes = require('../middleware/cardTimes');
 
-module.exports = function (splitSizes, cardTimes, lastTimeDone, groupByWeek, averageSizes, removeZeroSizes) {
+module.exports = function (splitSizes, lastTimeDone, groupByWeek, averageSizes, removeZeroSizes) {
 
     /* GET home page. */
     router.get('/',
