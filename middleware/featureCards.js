@@ -1,18 +1,24 @@
+var _ = require('lodash');
+
 module.exports = function createFeatureParser(config, client) {
+
     return function storeFeatures(req, res, next) {
         client.getBoardArchiveCards(config.boardId, function (err, archive) {
             if (err) {
+                console.log(err);
                 return next(err)
             }
-
-            var featureCards = [];
-
-            var featureCards = archive.filter(function(card) {
-                return config.cardTypes.indexOf(card.TypeName) > -1;
+            var data = [];
+            _.forEach(config.cardTypes, function (cardType) {
+                var cardsOfType = _.filter(archive, {
+                    TypeName: cardType
+                });
+                data = data.concat(cardsOfType);
             });
 
-            req.features = featureCards;
+            req.features = data;
             next();
         });
     }
+
 }
