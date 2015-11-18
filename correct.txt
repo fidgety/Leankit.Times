@@ -64,8 +64,8 @@
       <tr>
         <td class="bold">1</td>
         <td>2</td>
-        <td>55</td>
-        <td>23</td>
+        <td>50</td>
+        <td>16</td>
         <td>7</td>
       </tr>
       
@@ -73,7 +73,7 @@
       <tr>
         <td class="bold">2</td>
         <td>3</td>
-        <td>26</td>
+        <td>27</td>
         <td>5</td>
         <td>6</td>
       </tr>
@@ -81,28 +81,28 @@
       
       <tr>
         <td class="bold">3</td>
-        <td>1</td>
         <td>2</td>
+        <td>4</td>
         <td>1</td>
-        <td>2</td>
+        <td>4</td>
       </tr>
       
       
       <tr>
         <td class="bold">4</td>
-        <td>4</td>
-        <td>4</td>
+        <td>5</td>
+        <td>5</td>
         <td>1</td>
-        <td>4</td>
+        <td>5</td>
       </tr>
       
       
       <tr>
         <td class="bold">5</td>
-        <td>6</td>
-        <td>6</td>
+        <td>9</td>
+        <td>9</td>
         <td>1</td>
-        <td>6</td>
+        <td>9</td>
       </tr>
       
     </table>

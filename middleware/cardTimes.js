@@ -1,79 +1,54 @@
 var _ = require('lodash');
-var moment = require('moment')
+var moment = require('moment');
+var momentBusiness = require('moment-business');
 
-module.exports = function createCardTimer(config, client) {
+var config = require('../config/config');
+var leankit = require("leankit-client");
+var client = leankit.createClient(config.accountName, config.email, config.password);
+var dateFormat = 'DD/MM/YYYY at hh:mm:ss a';
 
-    function getWeekdaysBetween(start, end) {
-        var initial = moment(start);
-        var weekdays = 0;
-        while (initial.isBefore(end)) {
-            if (initial.isoWeekday() < 5) {
-                weekdays++;
+module.exports = function cardTimes(req, res, next) {
+    var called = 0;
+    var featureWithSize = req.features.filter(function (card) {
+        return card.Size !== 0;
+    });
+
+    var numberOfCards = featureWithSize.length;
+
+    _.forEach(featureWithSize, function (card, i) {
+        client.getCardHistory(config.boardId, card.Id, function (err, cardHistory) {
+            called++;
+            if (err) {
+                console.log('err', err)
             }
-            initial.add(1, 'd');
-        }
-        return weekdays;
-    }
 
-    return function cardTimes(req, res, next) {
-        var called = 0;
-        var featureWithSize = req.features.filter(function (card) {
-            return card.Size !== 0;
-        });
+            var cardHistorySortedByTime = cardHistory.map(function (change) {
+                change.Date = moment(change.DateTime, dateFormat).format('X');
 
-        var numberOfCards = featureWithSize.length;
-
-        _.forEach(featureWithSize, function (card, i) {
-            client.getCardHistory(config.boardId, card.Id, function (err, cardChanges) {
-                called++;
-                if (err) {
-                    console.log('err', err)
-                }
-                var firstTimeWipped = _.chain(cardChanges)
-                    .where({
-                        ToLaneTitle: config.fromLane
-                    })
-                    .map(function (change) {
-                        return {
-                            Date: moment(change.DateTime, 'DD/MM/YYYY at hh:mm:ss a').format('X')
-                        }
-                    })
-                    .sortBy('Date')
-                    .pluck('Date')
-                    .value()[0];
-
-                if (!firstTimeWipped) {
-                    return;
-                }
-
-                var lastTimeDone = _.chain(cardChanges)
-                    .where({
-                        ToLaneTitle: config.toLane
-                    })
-                    .map(function (change) {
-                        return {
-                            Date: moment(change.DateTime, 'DD/MM/YYYY at hh:mm:ss a').format('X')
-                        }
-                    })
-                    .sortByOrder('Date', 'desc')
-                    .pluck('Date')
-                    .value()[0];
-
-                var started = moment.unix(firstTimeWipped)
-                var finished = moment.unix(lastTimeDone)
-
-                var totalTime = getWeekdaysBetween(started, finished);
-                card.TimeInDays = totalTime;
+                return change;
+            }).sort(function(a, b) {
+                return parseInt(a.Date, 10) - parseInt(b.Date, 10);
             });
-        });
-        console.log(numberOfCards)
-        var interval = setInterval(function () {
-            if (called === numberOfCards) {
-                clearInterval(interval);
-                next();
-            }
-            console.log('did', called, 'equal', numberOfCards);
-        }, 1000);
 
-    }
+            var start = _.find(cardHistorySortedByTime, {ToLaneTitle: config.fromLane});
+            var end = _.find(cardHistorySortedByTime.reverse(), {ToLaneTitle: config.toLane});
+
+            if (!start || !end) {
+                return false;
+            }
+
+            firstTimeWipped = moment(start.DateTime, dateFormat);
+            lastTimeDone = moment(end.DateTime, dateFormat);
+
+            var totalTime = firstTimeWipped.weekDays(lastTimeDone);
+            card.TimeInDays = totalTime;
+        });
+    });
+    var interval = setInterval(function () {
+        if (called === numberOfCards) {
+            clearInterval(interval);
+            next();
+        }
+    }, 1000);
+
 };
