@@ -2,21 +2,22 @@ var express = require('express');
 var router = express.Router();
 var _ = require('lodash');
 var featureCards = require('../middleware/featureCards');
+var groupCardsBySize = require('../middleware/splitSizes');
 
 module.exports = function (splitSizes, cardTimes, lastTimeDone, groupByWeek, averageSizes, removeZeroSizes) {
 
     /* GET home page. */
-    router.get('/', function (req,res,next) {
+    router.get('/', function (req, res, next) {
         featureCards().then(function(data){
             req.features = data;
-            next();
+            return data;
         })
-        .catch(next);
-    },
-        splitSizes,
-        cardTimes,
-        function (req, res) {
+        .then(cardTimes)
+        .then(function () {
+            req.sizes = groupCardsBySize(req.features);
+
             var sizeData = [];
+
             _.forEach(Object.keys(req.sizes), function (key) {
                 var sizes = req.sizes[key];
                 var dataForThisSize = {
@@ -44,7 +45,9 @@ module.exports = function (splitSizes, cardTimes, lastTimeDone, groupByWeek, ave
                 title: 'Ticket Times',
                 ticketData: sizeData
             });
-        });
+        })
+        .catch(next);
+    });
 
     /* GET home page. */
     router.get('/averageTicketSize',

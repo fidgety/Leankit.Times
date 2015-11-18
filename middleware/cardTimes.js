@@ -10,12 +10,12 @@ var dateFormat = 'DD/MM/YYYY at hh:mm:ss a';
 
 var getCardHistory = Promise.promisify(client.getCardHistory, {context: client});
 
-module.exports = function cardTimes(req, res, next) {
-    var featureWithSize = req.features.filter(function (card) {
-        return card.Size !== 0;
-    });
+module.exports = function cardTimes(features) {
+    return Promise.all(features.map(function (card) {
+        if (card.Size === 0) {
+            return card;
+        }
 
-    Promise.all(featureWithSize.map(function (card) {
         return getCardHistory(config.boardId, card.Id)
             .then(function (cardHistory) {
                 var cardHistorySortedByTime = cardHistory.map(function (change) {
@@ -37,10 +37,8 @@ module.exports = function cardTimes(req, res, next) {
                 lastTimeDone = moment(end.DateTime, dateFormat);
 
                 card.TimeInDays = firstTimeWipped.weekDays(lastTimeDone);
+
+                return card;
         });
-    }))
-    .then(function (data) {
-        next();
-    })
-    .catch(next);
+    }));
 };
