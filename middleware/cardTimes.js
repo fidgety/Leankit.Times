@@ -23,7 +23,7 @@ module.exports = function cardTimes(req, res, next) {
 
                     return change;
                 }).sort(function(a, b) {
-                    return parseInt(a.Date, 10) - parseInt(b.Date, 10);
+                    return Number(a.Date) - Number(b.Date);
                 });
 
                 var start = _.find(cardHistorySortedByTime, {ToLaneTitle: config.fromLane});
